@@ -1,0 +1,2 @@
+import { StyleSheet, Text, View } from 'react-native'; import type { PlotStatus } from '@/types/domain'; import { STATUS_COLORS, STATUS_LABELS } from '@/utils/plotStatus';
+export function StatusBadge({status}:{status:PlotStatus}){return <View style={[styles.badge,{backgroundColor:STATUS_COLORS[status]}]}><Text style={styles.text}>{STATUS_LABELS[status]}</Text></View>}; const styles=StyleSheet.create({badge:{borderRadius:20,paddingHorizontal:10,paddingVertical:5,alignSelf:'flex-start'},text:{color:'white',fontWeight:'700',fontSize:12}});

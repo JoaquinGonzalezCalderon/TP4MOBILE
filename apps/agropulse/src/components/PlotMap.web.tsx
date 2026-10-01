@@ -1,0 +1,10 @@
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { router } from 'expo-router';
+import type { Plot, Reading } from '@/types/domain';
+import { getPlotStatus, STATUS_COLORS, STATUS_LABELS } from '@/utils/plotStatus';
+import { StatusBadge } from '@/components/StatusBadge';
+
+export default function PlotMap({ plots, readings, organizationName }: { plots: Plot[]; readings: Record<string, Reading | null>; organizationName?: string }) {
+  return <ScrollView contentContainerStyle={styles.page}><Text style={styles.title}>Mapa de lotes</Text><Text style={styles.org}>{organizationName}</Text><Text style={styles.notice}>Vista de lotes para navegador. El mapa con polígonos está disponible en Android/iOS.</Text>{plots.length === 0 ? <Text>No hay lotes para este establecimiento.</Text> : plots.map(plot => { const status = getPlotStatus(readings[plot.id], plot.threshold_min, plot.threshold_max); return <Pressable key={plot.id} style={[styles.card, { borderLeftColor: STATUS_COLORS[status] }]} onPress={() => router.push(`/plot/${plot.id}`)}><View style={styles.cardHeader}><Text style={styles.name}>{plot.name}</Text><StatusBadge status={status} /></View><Text>{plot.crop ?? 'Sin cultivo'}</Text><Text style={{ color: STATUS_COLORS[status] }}>{STATUS_LABELS[status]}</Text><Text style={styles.link}>Abrir detalle</Text></Pressable>; })}</ScrollView>;
+}
+const styles = StyleSheet.create({ page: { padding: 18, backgroundColor: '#F8FAFC', flexGrow: 1 }, title: { fontSize: 28, fontWeight: '800', color: '#14532D' }, org: { color: '#64748B', marginBottom: 14 }, notice: { backgroundColor: '#EFF6FF', color: '#1E40AF', padding: 12, borderRadius: 10, marginBottom: 14 }, card: { backgroundColor: 'white', borderLeftWidth: 5, borderRadius: 12, padding: 16, marginBottom: 12, gap: 6 }, cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }, name: { fontSize: 18, fontWeight: '800' }, link: { color: '#166534', fontWeight: '700', marginTop: 4 } });

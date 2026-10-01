@@ -1,0 +1,1 @@
+import { ActivityIndicator, Text, View } from 'react-native'; export function LoadingState({label='Cargando...'}:{label?:string}){return <View style={{alignItems:'center',padding:32,gap:10}}><ActivityIndicator/><Text>{label}</Text></View>}

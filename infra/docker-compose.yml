@@ -1,0 +1,20 @@
+services:
+  redpanda:
+    image: redpandadata/redpanda:v24.3.5
+    command: redpanda start --overprovisioned --smp 1 --memory 1G --reserve-memory 0M --node-id 0 --check=false --kafka-addr PLAINTEXT://0.0.0.0:9092 --advertise-kafka-addr PLAINTEXT://redpanda:9092
+    ports: ["9092:9092"]
+  worker:
+    build: ./worker
+    environment:
+      REDPANDA_BROKERS: ${REDPANDA_BROKERS:-redpanda:9092}
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+    depends_on: [redpanda]
+  simulator:
+    build: ./simulator
+    environment:
+      REDPANDA_BROKERS: ${REDPANDA_BROKERS:-redpanda:9092}
+      SIMULATOR_INTERVAL_MS: ${SIMULATOR_INTERVAL_MS:-5000}
+      PAUSED_STATION_IDS: ${PAUSED_STATION_IDS:-}
+      STATION_IDS: ${STATION_IDS:-30000000-0000-0000-0000-000000000001,30000000-0000-0000-0000-000000000002,30000000-0000-0000-0000-000000000003}
+    depends_on: [redpanda]

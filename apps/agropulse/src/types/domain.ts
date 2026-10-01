@@ -1,0 +1,10 @@
+export type Role = 'producer' | 'operator' | 'advisor';
+export type PlotStatus = 'stale' | 'dry' | 'optimal' | 'wet';
+export type ValveStatus = 'open' | 'closed';
+export type CommandStatus = 'pending' | 'applied' | 'failed' | 'cancelled';
+export type Plot = { id:string; organization_id:string; name:string; crop:string|null; polygon:{type:'Polygon';coordinates:number[][][]}; threshold_min:number; threshold_max:number };
+export type Reading = { id:string; station_id:string; measured_at:string; moisture_pct:number; temp_c:number; rain_mm:number|null; source:'sensor'|'manual' };
+export type Station = { id:string; plot_id:string; name:string; lat:number; lng:number };
+export type Valve = { id:string; plot_id:string; name:string; status:ValveStatus };
+export type Command = { id:string; valve_id:string; requested_by:string; action:'open'|'close'; duration_min:number|null; status:CommandStatus; client_request_id:string; created_at:string; applied_at:string|null; error_reason:string|null };
+export type Organization = { id:string; name:string; region:string };
